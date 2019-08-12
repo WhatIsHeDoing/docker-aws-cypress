@@ -11,28 +11,22 @@ ENV DEBIAN_FRONTEND="noninteractive" \
 RUN set -ex \
     && echo 'Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/99use-gzip-compression \
     && apt-get update \
-    && apt install -y  --no-install-recommends apt-transport-https \
+    && apt-get install -y --no-install-recommends apt-transport-https \
     && apt-get update \
     && apt-get install -y --no-install-recommends apt-utils software-properties-common \
     && apt-add-repository -y ppa:git-core/ppa \
     && apt-get update \
-    && apt-get install -y --no-install-recommends git=1:2.* \
-    && apt-get install -y --no-install-recommends openssh-client \
+    && apt-get install -y --no-install-recommends git=1:2.* openssh-client \
     && mkdir ~/.ssh \
     && touch ~/.ssh/known_hosts \
     && chmod 600 ~/.ssh/known_hosts \
     && apt-get install -y --no-install-recommends \
-    asciidoc \
     autoconf \
     automake \
     build-essential \
     bzip2 \
-    bzr \
-    bzr \
     ca-certificates \
     curl \
-    cvs \
-    cvsps \
     dirmngr \
     dpkg-dev \
     e2fsprogs \
@@ -63,12 +57,9 @@ RUN set -ex \
     libgconf-2-4 \
     libgeoip-dev \
     libglib2.0-dev \
-    libgtk-3-0 \
     libjpeg-dev \
     libkrb5-dev \
     liblzma-dev \
-    libmagickcore-dev \
-    libmagickwand-dev \
     libncurses5-dev \
     libnss3 \
     libpq-dev \
@@ -82,11 +73,9 @@ RUN set -ex \
     libxslt1-dev \
     libxss1 \
     libxtst6 \
-    libyaml-dev \
     locales \
     make \
     netbase \
-    parallel \
     patch \
     procps \
     python-bzrlib \
@@ -98,8 +87,6 @@ RUN set -ex \
     sgml-base \
     sgml-data \
     tar \
-    tcl \
-    tcl8.6 \
     unzip \
     wget \
     xdg-utils \

@@ -1,5 +1,8 @@
 # docker-aws-cypress
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/whatishedoing/docker-aws-cypress?style=for-the-badge)][site]
+[![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/whatishedoing/docker-aws-cypress?style=for-the-badge)][site]
+
 ## 👋 Introduction
 
 A [Docker] image designed to be used in [AWS], as a Test [CodePipeline] step that uses [CodeBuild]
@@ -156,4 +159,5 @@ phases:
 [CodePipeline]: https://aws.amazon.com/codepipeline/
 [Cypress]: https://www.cypress.io/
 [Docker]: https://www.docker.com/
+[site]: https://hub.docker.com/r/whatishedoing/docker-aws-cypress
 [Terraform]: https://www.terraform.io/
