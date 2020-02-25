@@ -141,6 +141,6 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get install -y --no-install-recommends yarn \
-    && yarn global add cypress@3.8.2 --cache-folder ./ycache \
+    && yarn global add cypress@4.0.2 --cache-folder ./ycache \
     && rm -rf ./ycache \
     && cd / && rm -rf $N_SRC_DIR
