@@ -14,6 +14,7 @@ RUN set -ex \
     && apt-get install -y --no-install-recommends apt-transport-https \
     && apt-get update \
     && apt-get install -y --no-install-recommends apt-utils software-properties-common \
+    && add-apt-repository -y ppa:canonical-chromium-builds/stage \
     && apt-add-repository -y ppa:git-core/ppa \
     && apt-get update \
     && apt-get install -y --no-install-recommends git=1:2.* openssh-client \
@@ -26,6 +27,8 @@ RUN set -ex \
     build-essential \
     bzip2 \
     ca-certificates \
+    chromium-browser \
+    chromium-chromedriver \
     curl \
     dirmngr \
     dpkg-dev \
@@ -112,26 +115,6 @@ RUN set -ex \
     && pip3 install --upgrade setuptools wheel \
     && pip3 install awscli boto3
 
-# Headless Chrome.
-RUN set -ex \
-    && curl --silent --show-error --location --fail --retry 3 --output /tmp/google-chrome-stable_current_amd64.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
-    && (dpkg -i /tmp/google-chrome-stable_current_amd64.deb || apt-get -fy install) \
-    && rm -rf /tmp/google-chrome-stable_current_amd64.deb \
-    && sed -i 's|HERE/chrome"|HERE/chrome" --disable-setuid-sandbox --no-sandbox|g' "/opt/google/chrome/google-chrome" \
-    && google-chrome --version
-
-# ChromeDriver.
-RUN set -ex \
-    && CHROME_VERSION=`google-chrome --version | awk -F '[ .]' '{print $3"."$4"."$5}'` \
-    && CHROME_DRIVER_VERSION=`wget -qO- chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION` \
-    && wget --no-verbose -O /tmp/chromedriver_linux64.zip https://chromedriver.storage.googleapis.com/$CHROME_DRIVER_VERSION/chromedriver_linux64.zip \
-    && unzip /tmp/chromedriver_linux64.zip -d /opt \
-    && rm /tmp/chromedriver_linux64.zip \
-    && mv /opt/chromedriver /opt/chromedriver-$CHROME_DRIVER_VERSION \
-    && chmod 755 /opt/chromedriver-$CHROME_DRIVER_VERSION \
-    && ln -s /opt/chromedriver-$CHROME_DRIVER_VERSION /usr/bin/chromedriver \
-    && chromedriver --version
-
 # Node.js with Yarn and Cypress.
 ENV N_SRC_DIR="$SRC_DIR/n"
 
@@ -141,7 +124,7 @@ RUN git clone https://github.com/tj/n $N_SRC_DIR \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get install -y --no-install-recommends yarn \
-    && yarn global add cypress@4.8.0 --cache-folder ./ycache \
+    && yarn global add cypress@5.4.0 --cache-folder ./ycache \
     && cypress verify \
     && rm -rf ./ycache \
     && cd / && rm -rf $N_SRC_DIR

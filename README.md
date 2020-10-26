@@ -21,10 +21,10 @@ Configure a CodePipeline Test step:
 ```ruby
 resource "aws_codepipeline" "website" {
   name     = "website"
-  role_arn = "${aws_iam_role.codepipeline.arn}"
+  role_arn = aws_iam_role.codepipeline.arn
 
   artifact_store {
-    location = "${aws_s3_bucket.bucket.id}"
+    location = aws_s3_bucket.bucket.id
     type     = "S3"
   }
 
@@ -45,7 +45,7 @@ resource "aws_codepipeline" "website" {
       # Instead, the build copies them somewhere useful.
 
       configuration = {
-        ProjectName = "${aws_codebuild_project.smoke_tests.name}"
+        ProjectName = aws_codebuild_project.smoke_tests.name
       }
     }
   }
@@ -64,7 +64,7 @@ resource "aws_codebuild_project" "smoke_tests" {
   description   = "Runs smoke tests against the website."
   badge_enabled = true
   build_timeout = 20
-  service_role  = "${aws_iam_role.codebuild.arn}"
+  service_role  = aws_iam_role.codebuild.arn
 
   artifacts {
     type                = "S3"
@@ -108,8 +108,8 @@ resource "aws_codebuild_project" "smoke_tests" {
 
   logs_config {
     cloudwatch_logs {
-      group_name  = "${aws_cloudwatch_log_group.codebuild.name}"
-      stream_name = "${aws_cloudwatch_log_stream.codebuild.name}"
+      group_name  = aws_cloudwatch_log_group.codebuild.name
+      stream_name = aws_cloudwatch_log_stream.codebuild.name
     }
   }
 
@@ -128,36 +128,39 @@ Finally, under the `smoke-tests` directory, add a `buildspec.yml`:
 version: 0.2
 
 env:
-  variables:
-    # Disable terminal colour.
-    # https://docs.cypress.io/guides/references/changelog.html#3-0-0
-    NO_COLOR: 1
-    TERM: "xterm-mono"
+    variables:
+        # Disable terminal colour.
+        # https://docs.cypress.io/guides/references/changelog.html#3-0-0
+        NO_COLOR: 1
+        TERM: "xterm-mono"
 
 phases:
-  install:
-    commands:
-      - cd smoke-tests
-      - yarn install --frozen-lockfile
+    install:
+        commands:
+            - cd smoke-tests
+            - yarn install --frozen-lockfile
 
-  build:
-    commands:
-      - yarn lint
-      - yarn start
+    pre_build:
+        commands:
+            - yarn lint
 
-  post_build:
-    commands:
-      # Copy screenshots to S3, rather than using CodePipeline to deploy,
-      # as it will have no artifact if this fails!
-      # Ignore failures, as successful tests do not yield screenshots.
-      - aws s3 cp smoke-tests/cypress/screenshots/ "s3://$S3_ARTIFACTS_BUCKET/smoke-tests/" --recursive || true
-      # Repeat for videos if recording.
+    build:
+        commands:
+            - yarn start
+
+    post_build:
+        commands:
+            # Copy screenshots to S3, rather than using CodePipeline to deploy,
+            # as it will have no artifact if this fails!
+            # Ignore failures, as successful tests do not yield screenshots.
+            - aws s3 cp smoke-tests/cypress/screenshots/ "s3://$S3_ARTIFACTS_BUCKET/smoke-tests/" --recursive || true
+            # Repeat for videos if recording.
 ```
 
-[AWS]: https://aws.amazon.com/
-[CodeBuild]: https://aws.amazon.com/codebuild/
-[CodePipeline]: https://aws.amazon.com/codepipeline/
-[Cypress]: https://www.cypress.io/
-[Docker]: https://www.docker.com/
+[aws]: https://aws.amazon.com/
+[codebuild]: https://aws.amazon.com/codebuild/
+[codepipeline]: https://aws.amazon.com/codepipeline/
+[cypress]: https://www.cypress.io/
+[docker]: https://www.docker.com/
 [site]: https://hub.docker.com/r/whatishedoing/docker-aws-cypress
-[Terraform]: https://www.terraform.io/
+[terraform]: https://www.terraform.io/

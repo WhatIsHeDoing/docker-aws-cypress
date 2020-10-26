@@ -2,7 +2,7 @@
     "recommendations": [
         "davidanson.vscode-markdownlint",
         "editorconfig.editorconfig",
-        "mauve.terraform",
+        "hashicorp.terraform",
         "ms-azuretools.vscode-docker"
     ],
     "unwantedRecommendations": []
