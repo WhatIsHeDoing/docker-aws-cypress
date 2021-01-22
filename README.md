@@ -68,7 +68,7 @@ resource "aws_codebuild_project" "smoke_tests" {
 
   artifacts {
     type                = "S3"
-    location            = "${aws_s3_bucket.bucket.id}"
+    location            = aws_s3_bucket.bucket.id
     packaging           = "ZIP"
     encryption_disabled = true
   }
@@ -95,14 +95,14 @@ resource "aws_codebuild_project" "smoke_tests" {
 
     environment_variable {
       name  = "S3_ARTIFACTS_BUCKET"
-      value = "${aws_s3_bucket.bucket.id}"
+      value = aws_s3_bucket.bucket.id
     }
   }
 
   source {
     buildspec       = "smoke-tests/buildspec.yml"
     git_clone_depth = 1
-    location        = "${aws_codecommit_repository.website.clone_url_http}"
+    location        = aws_codecommit_repository.website.clone_url_http
     type            = "CODECOMMIT"
   }
 
@@ -155,6 +155,14 @@ phases:
             # Ignore failures, as successful tests do not yield screenshots.
             - aws s3 cp smoke-tests/cypress/screenshots/ "s3://$S3_ARTIFACTS_BUCKET/smoke-tests/" --recursive || true
             # Repeat for videos if recording.
+```
+
+## 🧪 Testing
+
+Test changes to this container by building it locally with:
+
+```sh
+docker build -t docker-aws-cypress .
 ```
 
 [aws]: https://aws.amazon.com/
