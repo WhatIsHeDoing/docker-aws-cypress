@@ -1,5 +1,7 @@
 # docker-aws-cypress
 
+> **Retired in October 2026.** This image last built in January 2021, on Ubuntu 18.04 and Node.js 10, both past end of life. Use [`cypress/included`](https://hub.docker.com/r/cypress/included) or Playwright's own image instead. Current WhatIsHeDoing images live in [WhatIsHeDoing/containers](https://github.com/WhatIsHeDoing/containers).
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/whatishedoing/docker-aws-cypress?style=for-the-badge)][site]
 [![Docker Cloud Build Status](https://img.shields.io/docker/cloud/build/whatishedoing/docker-aws-cypress?style=for-the-badge)][site]
 
